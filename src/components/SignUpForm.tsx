@@ -73,9 +73,13 @@ export function SignUpForm() {
             onChange={handleChange}
             onBlur={handleEmailBlur}
           />
-          <div className="label">
-            <span className="label-text-alt text-error">{emailError}</span>
-          </div>
+          {emailError ? (
+            <div className="label">
+              <span className="label-text-alt text-error">{emailError}</span>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <div>
           <label className="label">
