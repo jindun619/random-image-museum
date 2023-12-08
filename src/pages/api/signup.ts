@@ -10,14 +10,13 @@ export default async function handler(
     const { body } = req;
     const { email, password, passwordagain, nickname, introduce } = body;
 
-    if (password.length < 6) {
-      res.json({
-        error: 1, //패스워드 길이 <6
-      });
-    }
     if (password !== passwordagain) {
       res.json({
-        error: 2, //비밀번호 불일치
+        error: {
+          message: "비밀번호가 일치하지 않습니다.", //비밀번호 불일치
+          name: "AuthApiError",
+          status: 601
+        },
       });
     } else {
       const { data, error } = await supabaseAdmin.auth.admin.createUser({
