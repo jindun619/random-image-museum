@@ -32,15 +32,14 @@ export function SignUpForm() {
     introduce: "",
   });
 
-  const [isAllFilled, setIsAllFilled] = useState<boolean>(false);
   const [areInputsValid, setAreInputsValid] = useState<InputsValid>({
     email: false,
     password: false,
     nickname: false,
   });
   const [errorMsgs, setErrorMsgs] = useState<ErrorMsgs>();
-
   const [warningMsg, setWarningMsg] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValues({
@@ -91,16 +90,18 @@ export function SignUpForm() {
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setLoading(true);
     axios
       .post("/api/signup", inputValues)
       .then((res) => {
-        console.log(res);
+        setLoading(false);
         if (res.data.error) {
           const errorMsg = getErrorMsg(res.data.error);
           setWarningMsg(errorMsg);
         }
       })
       .catch((err) => {
+        setLoading(false);
         console.log(err);
       });
   };
@@ -256,9 +257,14 @@ export function SignUpForm() {
             onClick={handleSubmit}
             disabled={
               !Object.values(inputValues).every(Boolean) ||
-              !Object.values(areInputsValid).every(Boolean)
+              !Object.values(areInputsValid).every(Boolean) ||
+              loading
             }>
-            회원가입
+            {loading ? (
+              <span className="loading loading-dots loading-md"></span>
+            ) : (
+              "회원가입"
+            )}
           </button>
         </div>
       </form>
