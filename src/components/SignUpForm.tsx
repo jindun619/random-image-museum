@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 import { getErrorMsg } from "@/utils/handleErrors";
 
@@ -24,6 +25,8 @@ interface ErrorMsgs {
 }
 
 export function SignUpForm() {
+  const router = useRouter();
+
   const [inputValues, setInputValues] = useState<InputValues>({
     email: "",
     password: "",
@@ -98,6 +101,11 @@ export function SignUpForm() {
         if (res.data.error) {
           const errorMsg = getErrorMsg(res.data.error);
           setWarningMsg(errorMsg);
+        } else {
+          router.push({
+            pathname: "/verifyEmail",
+            query: { userId: res.data.data.user.id },
+          });
         }
       })
       .catch((err) => {
