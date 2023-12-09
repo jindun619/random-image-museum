@@ -15,7 +15,7 @@ export default async function handler(
         error: {
           message: "비밀번호가 일치하지 않습니다.", //비밀번호 불일치
           name: "AuthApiError",
-          status: 601
+          status: 601,
         },
       });
     } else {

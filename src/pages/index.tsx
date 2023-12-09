@@ -1,12 +1,7 @@
-import { SignInForm } from "@/components/SignInForm";
-import { SignUpForm } from "@/components/SignUpForm";
-
 export default function IndexPage() {
   return (
-    <>
-      <SignInForm />
-      <div className="mt-10"></div>
-      <SignUpForm />
-    </>
+    <div>
+      <h1 className="text-3xl">This is a home page</h1>
+    </div>
   );
 }

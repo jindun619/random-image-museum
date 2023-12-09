@@ -1,4 +1,44 @@
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+
+import { supabase } from "@/lib/supabase";
+
+interface InputValues {
+  email: string;
+  password: string;
+}
+
 export function SignInForm() {
+  const router = useRouter();
+
+  const [inputValues, setInputValues] = useState<InputValues>({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValues({
+      ...inputValues,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    (async () => {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: inputValues.email,
+        password: inputValues.password,
+      });
+
+      if (!error) {
+        router.back();
+      }
+    })();
+  };
+
   return (
     <div className="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 max-w-lg">
       <h1 className="text-3xl font-semibold text-center text-gray-700">
@@ -11,8 +51,10 @@ export function SignInForm() {
           </label>
           <input
             type="email"
+            name="email"
             placeholder="이메일 주소"
             className="w-full input input-bordered"
+            onChange={handleChange}
           />
         </div>
         <div>
@@ -21,8 +63,10 @@ export function SignInForm() {
           </label>
           <input
             type="password"
+            name="password"
             placeholder="비밀번호를 입력하세요"
             className="w-full input input-bordered"
+            onChange={handleChange}
           />
         </div>
         <a
@@ -31,12 +75,19 @@ export function SignInForm() {
           비밀번호 찾기
         </a>
         <div>
-          <button className="btn btn-block">로그인</button>
+          <button
+            className="btn btn-block btn-neutral"
+            onClick={handleSubmit}
+            disabled={!Object.values(inputValues).every(Boolean)}>
+            로그인
+          </button>
         </div>
       </form>
       <div className="divider divider-neutral">or</div>
       <div>
-        <button className="btn btn-block btn-neutral">회원가입</button>
+        <Link href="/signup">
+          <button className="btn btn-block btn-neutral">회원가입</button>
+        </Link>
       </div>
     </div>
   );
