@@ -16,6 +16,7 @@ export function SignInForm() {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValues({
@@ -26,12 +27,14 @@ export function SignInForm() {
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     (async () => {
       const { error } = await supabase.auth.signInWithPassword({
         email: inputValues.email,
         password: inputValues.password,
       });
+      setLoading(false);
 
       if (!error) {
         router.back();
@@ -78,8 +81,12 @@ export function SignInForm() {
           <button
             className="btn btn-block btn-neutral"
             onClick={handleSubmit}
-            disabled={!Object.values(inputValues).every(Boolean)}>
-            로그인
+            disabled={!Object.values(inputValues).every(Boolean) || loading}>
+            {!loading ? (
+              "로그인"
+            ) : (
+              <span className="loading loading-dots loading-md"></span>
+            )}
           </button>
         </div>
       </form>
