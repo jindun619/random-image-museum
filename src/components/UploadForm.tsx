@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
 import { supabase } from "@/lib/supabase";
@@ -7,13 +7,17 @@ import { Artwork } from "@/components/Artwork";
 
 import { uploadInputsState } from "@/recoil/atoms/uploadInputsState";
 
-export function UploadForm() {
+export function UploadForm({ author }: { author: string }) {
   const router = useRouter();
 
   const [uploadInputs, setUploadInputs] = useRecoilState(uploadInputsState);
 
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    setUploadInputs({
+      ...uploadInputs,
+      file: file as File,
+    });
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -46,6 +50,10 @@ export function UploadForm() {
 
     console.log("do some backend stuff");
   };
+
+  useEffect(() => {
+    console.log(uploadInputs);
+  }, [uploadInputs]);
 
   return (
     <div>
@@ -98,7 +106,7 @@ export function UploadForm() {
         <Artwork
           src={uploadInputs.src}
           title={uploadInputs.title}
-          author="author"
+          author={author}
           desc={uploadInputs.desc}
           withBtn={false}
         />
