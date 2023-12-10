@@ -1,19 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
+import { useRouter } from "next/router";
+import { useRecoilState } from "recoil";
+import { supabase } from "@/lib/supabase";
 
 import { Artwork } from "@/components/Artwork";
 
-interface InputValues {
-  src: string;
-  title: string;
-  desc: string;
-}
+import { uploadInputsState } from "@/recoil/atoms/uploadInputsState";
 
 export function UploadForm() {
-  const [inputValues, setInputValues] = useState<InputValues>({
-    src: "",
-    title: "",
-    desc: "",
-  });
+  const router = useRouter();
+
+  const [uploadInputs, setUploadInputs] = useRecoilState(uploadInputsState);
 
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -21,8 +18,8 @@ export function UploadForm() {
       const reader = new FileReader();
       reader.onload = (e) => {
         const url = e.target?.result as string;
-        setInputValues({
-          ...inputValues,
+        setUploadInputs({
+          ...uploadInputs,
           src: url,
         });
       };
@@ -33,14 +30,19 @@ export function UploadForm() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setInputValues({
-      ...inputValues,
+    setUploadInputs({
+      ...uploadInputs,
       [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      router.push("/signin");
+    }
 
     console.log("do some backend stuff");
   };
@@ -70,6 +72,7 @@ export function UploadForm() {
               type="text"
               name="title"
               className="input input-bordered w-full max-w-xs"
+              value={uploadInputs.title}
               onChange={handleChange}
             />
           </div>
@@ -80,9 +83,12 @@ export function UploadForm() {
             <textarea
               name="desc"
               className="textarea textarea-bordered w-full max-w-xs"
+              value={uploadInputs.desc}
               onChange={handleChange}></textarea>
           </div>
-          <button className="btn btn-neutral" onClick={handleSubmit}>
+          <button
+            className="mt-2 btn btn-md btn-neutral"
+            onClick={handleSubmit}>
             제출
           </button>
         </form>
@@ -90,10 +96,10 @@ export function UploadForm() {
       <div className="mt-5">
         <h1 className="mb-2 text-3xl font-bold text-center">미리보기</h1>
         <Artwork
-          src={inputValues.src}
-          title={inputValues.title}
+          src={uploadInputs.src}
+          title={uploadInputs.title}
           author="author"
-          desc={inputValues.desc}
+          desc={uploadInputs.desc}
           withBtn={false}
         />
       </div>
