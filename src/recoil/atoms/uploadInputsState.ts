@@ -1,8 +1,7 @@
 import { atom } from "recoil";
 
 interface UploadInputsState {
-  file?: File
-  src: string;
+  file?: File;
   title: string;
   desc: string;
 }
@@ -10,7 +9,6 @@ interface UploadInputsState {
 export const uploadInputsState = atom<UploadInputsState>({
   key: "uploadInputsState",
   default: {
-    src: "",
     title: "",
     desc: "",
   },

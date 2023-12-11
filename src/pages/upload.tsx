@@ -25,7 +25,7 @@ export default function UploadPage() {
   if (session) {
     return (
       <div className="flex justify-center mt-5">
-        <UploadForm author={session.user.user_metadata.nickname} />
+        <UploadForm user={session.user} />
       </div>
     );
   }

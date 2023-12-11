@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
 import { supabase } from "@/lib/supabase";
@@ -7,13 +7,26 @@ import { Artwork } from "@/components/Artwork";
 
 import { uploadInputsState } from "@/recoil/atoms/uploadInputsState";
 
-export function UploadForm({ author }: { author: string }) {
+import { User } from "@supabase/supabase-js";
+
+export function UploadForm({ user }: { user: User }) {
   const router = useRouter();
 
+  const [url, setUrl] = useState<string>("");
   const [uploadInputs, setUploadInputs] = useRecoilState(uploadInputsState);
+  const [fileErrorMsg, setFileErrorMsg] = useState<string | null>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    //check for validation(isImage)
+    if (file) {
+      if (/^image\//.test(file.type)) {
+        setFileErrorMsg(null);
+      } else {
+        setFileErrorMsg("이미지 파일이 아닙니다.");
+      }
+    }
     setUploadInputs({
       ...uploadInputs,
       file: file as File,
@@ -21,11 +34,7 @@ export function UploadForm({ author }: { author: string }) {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const url = e.target?.result as string;
-        setUploadInputs({
-          ...uploadInputs,
-          src: url,
-        });
+        setUrl(e.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -42,18 +51,28 @@ export function UploadForm({ author }: { author: string }) {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
       router.push("/signin");
+    } else {
+      const { error } = await supabase.storage
+        .from("images")
+        .upload(`public/${user?.id}/${Date.now()}`, uploadInputs.file as File);
+      if (error) {
+        console.log("망함 ㅋㅋ");
+      } else {
+        setLoading(false);
+        setUploadInputs({
+          file: undefined,
+          title: "",
+          desc: "",
+        });
+        router.push("/");
+      }
     }
-
-    console.log("do some backend stuff");
   };
-
-  useEffect(() => {
-    console.log(uploadInputs);
-  }, [uploadInputs]);
 
   return (
     <div>
@@ -68,9 +87,19 @@ export function UploadForm({ author }: { author: string }) {
             </div>
             <input
               type="file"
+              accept="image/*"
               className="file-input file-input-sm file-input-bordered w-full max-w-xs"
               onChange={handleFileSelected}
             />
+            {fileErrorMsg ? (
+              <div className="label">
+                <span className="label-text-alt text-error">
+                  {fileErrorMsg}
+                </span>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
           <div>
             <div className="label">
@@ -96,17 +125,25 @@ export function UploadForm({ author }: { author: string }) {
           </div>
           <button
             className="mt-2 btn btn-md btn-neutral"
-            onClick={handleSubmit}>
-            제출
+            onClick={handleSubmit}
+            disabled={
+              fileErrorMsg !== null ||
+              !Object.values(uploadInputs).every(Boolean)
+            }>
+            {loading ? (
+              <span className="loading loading-dots loading-md"></span>
+            ) : (
+              "제출"
+            )}
           </button>
         </form>
       </div>
       <div className="mt-5">
         <h1 className="mb-2 text-3xl font-bold text-center">미리보기</h1>
         <Artwork
-          src={uploadInputs.src}
+          src={url}
           title={uploadInputs.title}
-          author={author}
+          author={user?.user_metadata.nickname}
           desc={uploadInputs.desc}
           withBtn={false}
         />
