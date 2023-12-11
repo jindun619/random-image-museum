@@ -1,7 +1,27 @@
 import { Artwork } from "@/components/Artwork";
 
+import { useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+
+import { getRandomArtwork } from "@/utils";
+
 export default function IndexPage() {
-  // const src = "http://via.placeholder.com/900x1200";
+  useEffect(() => {
+    (async () => {
+      console.log(await getRandomArtwork());
+    })();
+    // (async () => {
+    //   const { data, error } = await supabase.storage
+    //     .from("images")
+    //     .list("public");
+    //   console.log(data, error);
+    // })();
+    // (async () => {
+    //   const { data, error } = await supabase.from("artworks").select();
+    //   console.log(data, error);
+    // })();
+  }, []);
+
   const src =
     "https://cdn.pixabay.com/photo/2014/02/27/16/10/flowers-276014_640.jpg";
   const title = "Name of The Artwork";

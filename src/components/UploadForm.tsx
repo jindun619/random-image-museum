@@ -57,20 +57,37 @@ export function UploadForm({ user }: { user: User }) {
     if (!data.session) {
       router.push("/signin");
     } else {
-      const { error } = await supabase.storage
-        .from("images")
-        .upload(`public/${user?.id}/${Date.now()}`, uploadInputs.file as File);
-      if (error) {
-        console.log("망함 ㅋㅋ");
-      } else {
-        setLoading(false);
-        setUploadInputs({
-          file: undefined,
-          title: "",
-          desc: "",
-        });
-        router.push("/");
+      const artworkId = Date.now();
+      //storage에 이미지 저장
+      {
+        const { error } = await supabase.storage
+          .from("images")
+          .upload(`public/${user?.id}_${artworkId}`, uploadInputs.file as File);
+        if (error) {
+          console.log("망함 ㅋㅋ1", error);
+        }
       }
+      //database에 정보 저장
+      {
+        const { error } = await supabase.from("artworks").insert({
+          id: artworkId,
+          authorId: user.id,
+          authorNickname: user.user_metadata.nickname,
+          title: uploadInputs.title,
+          desc: uploadInputs.desc,
+        });
+        if (error) {
+          console.log("망함 ㅋㅋ2", error);
+        }
+      }
+
+      setLoading(false);
+      setUploadInputs({
+        file: undefined,
+        title: "",
+        desc: "",
+      });
+      router.push("/");
     }
   };
 

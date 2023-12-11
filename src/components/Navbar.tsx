@@ -60,7 +60,7 @@ export function Navbar() {
                   </a>
                 </li>
                 <li>
-                  <a>Settings</a>
+                  <Link href="/upload">작품 전시하기</Link>
                 </li>
                 <li>
                   <a onClick={signout}>로그아웃</a>
