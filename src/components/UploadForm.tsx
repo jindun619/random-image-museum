@@ -162,7 +162,6 @@ export function UploadForm({ user }: { user: User }) {
           title={uploadInputs.title}
           author={user?.user_metadata.nickname}
           desc={uploadInputs.desc}
-          withBtn={false}
         />
       </div>
     </div>
