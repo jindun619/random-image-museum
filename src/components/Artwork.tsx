@@ -3,10 +3,10 @@ interface ArtworkProps {
   title: string;
   author: string;
   desc: string;
-  withBtn: boolean;
+  regenBtn: () => void;
 }
 
-export function Artwork({ src, title, author, desc, withBtn }: ArtworkProps) {
+export function Artwork({ src, title, author, desc, regenBtn }: ArtworkProps) {
   return (
     <div className="border-2 border-neutral rounded-lg w-full md:w-[768px] mx-3 md:mx-0 p-5">
       <div className="borders border-secondary h-[300px] md:h-[450px]">
@@ -23,8 +23,10 @@ export function Artwork({ src, title, author, desc, withBtn }: ArtworkProps) {
           ) : (
             <div className="mr-5 skeleton w-full h-10"></div>
           )}
-          {withBtn ? (
-            <button className="btn btn-neutral btn-sm md:btn-md">
+          {true ? (
+            <button
+              className="btn btn-neutral btn-sm md:btn-md"
+              onClick={regenBtn}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

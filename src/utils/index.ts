@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase";
 
 const getRandomArtwork = async () => {
-  console.log("?");
   const { data } = await supabase.from("artworks").select();
 
   if (data) {
