@@ -33,7 +33,7 @@ export function Navbar() {
       <div>
         <Link href="/">
           <div>
-            <button className="btn btn-ghost text-xl">daisyUI</button>
+            <button className="btn btn-ghost text-xl">무작위 미술관</button>
           </div>
         </Link>
       </div>
