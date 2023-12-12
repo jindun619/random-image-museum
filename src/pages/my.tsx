@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "@/lib/supabase";
 
@@ -57,6 +57,7 @@ export default function MyPage() {
               title={v.title}
               author={v.authorNickname}
               desc={v.desc}
+              deleteBtn={{id: v.id, authorId: v.authorId}}  //artwork id를 parameter로 넘겨줌
             />
           </div>
         ))}
