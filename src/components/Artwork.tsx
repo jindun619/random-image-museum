@@ -13,16 +13,16 @@ export function Artwork({ src, title, author, desc, withBtn }: ArtworkProps) {
         {src ? (
           <img src={src} className="mx-auto h-full" />
         ) : (
-          <div className="flex justify-center items-center w-full h-full border-2 border-slate-400">
-            <p className="text-slate-400 text-3xl font-bold">
-              작품이 이곳에 전시됩니다
-            </p>
-          </div>
+          <div className="skeleton w-full h-full"></div>
         )}
       </div>
       <div className="borders border-accent p-5">
         <div className="flex justify-between">
-          <h1 className="text-xl md:text-3xl font-semibold">{title}</h1>
+          {title ? (
+            <h1 className="text-xl md:text-3xl font-semibold">{title}</h1>
+          ) : (
+            <div className="mr-5 skeleton w-full h-10"></div>
+          )}
           {withBtn ? (
             <button className="btn btn-neutral btn-sm md:btn-md">
               <svg
@@ -43,8 +43,22 @@ export function Artwork({ src, title, author, desc, withBtn }: ArtworkProps) {
             ""
           )}
         </div>
-        <p className="text-slate-500 font-bold">by {author}</p>
-        <p className="mt-3">{desc}</p>
+        {author ? (
+          <p className="text-slate-500 font-bold">by {author}</p>
+        ) : (
+          <div className="mt-2 skeleton w-[10rem] h-5"></div>
+        )}
+        {desc ? (
+          <p className="mt-3">{desc}</p>
+        ) : (
+          <div>
+            <div className="mt-3 skeleton w-full h-5"></div>
+            <div className="mt-3 skeleton w-full h-5"></div>
+            <div className="mt-3 skeleton w-full h-5"></div>
+            <div className="mt-3 skeleton w-full h-5"></div>
+            <div className="mt-3 skeleton w-full h-5"></div>
+          </div>
+        )}
       </div>
     </div>
   );

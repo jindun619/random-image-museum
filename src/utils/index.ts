@@ -1,16 +1,19 @@
 import { supabase } from "@/lib/supabase";
 
 const getRandomArtwork = async () => {
+  console.log("?");
   const { data } = await supabase.from("artworks").select();
-  console.log(data);
 
   if (data) {
     const randomNumber = Math.floor(Math.random() * data.length);
     const selected = data[randomNumber];
-    // const result = {
-
-    // }
-    return selected;
+    const result = {
+      src: `https://mxuynnjexrmtnwewutpx.supabase.co/storage/v1/object/public/images/public/${selected.authorId}_${selected.id}`,
+      title: selected.title,
+      author: selected.authorNickname,
+      desc: selected.desc,
+    };
+    return result;
   }
 };
 
