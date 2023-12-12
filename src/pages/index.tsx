@@ -33,7 +33,7 @@ export default function IndexPage() {
         title={curArtwork.title || ""}
         author={curArtwork.author || ""}
         desc={curArtwork.desc || ""}
-        regenBtn={regenArtwork}
+        regenEvent={regenArtwork}
       />
     </div>
   );

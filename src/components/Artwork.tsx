@@ -3,10 +3,16 @@ interface ArtworkProps {
   title: string;
   author: string;
   desc: string;
-  regenBtn: () => void;
+  regenEvent?: () => void;
 }
 
-export function Artwork({ src, title, author, desc, regenBtn }: ArtworkProps) {
+export function Artwork({
+  src,
+  title,
+  author,
+  desc,
+  regenEvent,
+}: ArtworkProps) {
   return (
     <div className="border-2 border-neutral rounded-lg w-full md:w-[768px] mx-3 md:mx-0 p-5">
       <div className="borders border-secondary h-[300px] md:h-[450px]">
@@ -23,10 +29,10 @@ export function Artwork({ src, title, author, desc, regenBtn }: ArtworkProps) {
           ) : (
             <div className="mr-5 skeleton w-full h-10"></div>
           )}
-          {true ? (
+          {regenEvent ? (
             <button
               className="btn btn-neutral btn-sm md:btn-md"
-              onClick={regenBtn}>
+              onClick={regenEvent}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

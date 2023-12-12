@@ -54,10 +54,7 @@ export function Navbar() {
                 tabIndex={0}
                 className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                 <li>
-                  <a className="justify-between">
-                    Profile
-                    <span className="badge">New</span>
-                  </a>
+                  <Link href="/my">내 작품</Link>
                 </li>
                 <li>
                   <Link href="/upload">작품 전시하기</Link>
@@ -67,7 +64,6 @@ export function Navbar() {
                 </li>
               </ul>
             </div>
-            {/*  */}
           </>
         ) : (
           <>
