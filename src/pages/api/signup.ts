@@ -27,6 +27,9 @@ export default async function handler(
           introduce: introduce,
         },
       });
+      if(error) {
+        res.json(error)
+      }
       await supabaseAdmin.auth.admin.inviteUserByEmail(email);
       res.json({ data, error });
     }

@@ -94,14 +94,17 @@ export function SignUpForm() {
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
+    console.log(inputValues)
     axios
       .post("/api/signup", inputValues)
       .then((res) => {
         setLoading(false);
         if (res.data.error) {
+          console.log(res.data.error)
           const errorMsg = getErrorMsg(res.data.error);
           setWarningMsg(errorMsg);
         } else {
+          console.log(res.data)
           router.push({
             pathname: "/verifyEmail",
             query: { userId: res.data.data.user.id },
